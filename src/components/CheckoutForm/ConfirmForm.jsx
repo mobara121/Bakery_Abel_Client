@@ -12,38 +12,24 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import moment from 'moment'
 
-const ConfirmForm = ({cart, user, userId, userfname, userlname, usermobile, useremail, orders, filterdOrders, subtotal, tax, total, addToCart, orderconfirmed, handleSubmitCart}) => {
+const ConfirmForm = ({cart, user, orders, addToCart, orderconfirmed}) => {
     // debugger;
     console.log(cart)
-    console.log(userId)
-    console.log(cart.cart.id)
-    var cartId = JSON.parse(JSON.stringify(cart.cart.id))
-    console.log(cartId)
+    console.log(user)
 
     const classes = useStyles();
-    const [orderId, setOrderId] = useState('')
     const [calDate, setCalDate] = useState(new Date())
     const [time, setTime] = useState('');
-
-    // if(!cart.id && cart.id){
-    //     // console.log(cart)
-    //     console.log(cart.cart.id)
-    //     // var cartid = cart.cart.id
-    //     // var cartId = JSON.stringify(cartid)
-    //     var cartId = JSON.parse(JSON.stringify(cart.cart.id))
-    //     console.log(cartId)
-    //     return cartId
-    //    }
 
     function onChange(calDate){
         setCalDate(calDate)
     };
     // debugger;
-    var FilteredOrders = orders.filter((order, id)=> order.isConfirmed === null) 
+    var FilteredOrders = orders.filter((order, id)=> order.cartId === cart.cart.id) 
     console.log(FilteredOrders)
-    
-    
-    // var cartId = (Math.random()+Math.random() + Math.random());
+    const subtotalcal =() =>(FilteredOrders.length>0 && FilteredOrders.reduce((a,v)=>a = a + (v.subtotal_price*1), 0));
+    const taxcal =()=>(Math.round((((FilteredOrders.length>0 && FilteredOrders.reduce((a,v)=>a = a + (v.subtotal_price*1), 0)) * 0.07) + Number.EPSILON)*100)/100);
+    const totalcal = subtotalcal()+taxcal();
 
     return (
         <>
@@ -89,17 +75,15 @@ const ConfirmForm = ({cart, user, userId, userfname, userlname, usermobile, user
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                            {FilteredOrders && FilteredOrders.map((order, id)=>(
+                            {FilteredOrders && FilteredOrders.sort(({orderId: previousID}, {orderId: currentID}) => previousID - currentID ).map((order, id)=>(
                             <TableRow key={id}>                          
-                                <div>{order.orderId}</div>
+                                <div style={{textAlign:'center', marginTop: '2vh'}}>{order.orderId}</div>
                                 <TableCell align="left">{order.product.name}</TableCell>
                                 <TableCell align="center">{order.qty}</TableCell>
                                 <TableCell align="center">{order.subtotal_price}</TableCell>
                                 <div>
-                                <Button style={{minWidth:'10%', margin: '2px 5px', padding: '1px 10px', backgroundColor: 'pink'}} type="button" variant="contained"><CheckIcon onClick={()=>orderconfirmed(order.orderId, true)}/></Button>
-                            </div>
-
-                             
+                                <Button style={{minWidth:'5%', margin: '2vh 2vw', backgroundColor: 'pink'}} type="button" variant="contained"><CheckIcon onClick={()=>orderconfirmed(order.orderId, true)}/></Button>
+                                </div>                           
                             </TableRow>
                             ))}
                             </TableBody>
@@ -109,7 +93,7 @@ const ConfirmForm = ({cart, user, userId, userfname, userlname, usermobile, user
                     <div>
                         <p className={classes.detailtitle}>Payment</p>
                         <div style={{textAlign:'right'}}>
-                            <p>Subtotal: ${subtotal}</p><p>Tax: ${tax}</p><p>Total: ${total}</p>
+                            <p>Subtotal: ${subtotalcal()}</p><p>Tax: ${taxcal()}</p><p>Total: ${totalcal}</p>
                         </div>
                     </div>
 
@@ -148,7 +132,7 @@ const ConfirmForm = ({cart, user, userId, userfname, userlname, usermobile, user
                         <Button component={Link} to="/order" variant="outlined">Back to Cart</Button>
                         <Button component={Link} to="/checkout" variant="outlined">BACK TO CONTACT FORM</Button>
                         
-                        <Button component={Link} to="/orderdetails" type="submit" variant="contained" color="primary" onClick={()=>addToCart(cartId, subtotal, tax, total, calDate, time, userId )}>Checkout</Button>
+                        <Button component={Link} to="/orderdetails" type="submit" variant="contained" color="primary" onClick={()=>addToCart(cart.cart.id, subtotalcal(), taxcal(), totalcal, calDate, time, user.id )}>Checkout</Button>
                     </div>
             </Paper>
          </main>

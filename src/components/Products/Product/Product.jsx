@@ -11,8 +11,12 @@ import useStyles from './style';
 
 const Product = ({product, cart, onAddToCart}) => {
     const classes = useStyles();
-
+// debugger;
     const [quantity, setQuantity] = useState('');
+    // console.log(cart)
+    // console.log(cart.cart.id)
+    // var cartId = JSON.parse(JSON.stringify(cart.cart.id))
+    // console.log(cart)
 
     var subtotal_price = quantity * product.unit_price
 

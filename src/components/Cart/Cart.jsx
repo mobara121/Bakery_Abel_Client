@@ -1,14 +1,14 @@
 import React, {useState} from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Typography, Button, List } from '@material-ui/core';
-import CheckIcon from '@material-ui/icons/Check';
+// import CheckIcon from '@material-ui/icons/Check';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'; 
 import useStyles from './styles';
 
 
-const Cart = ({ cart, orders, filterdOrders, subtotal, tax, total, handleUpdateOrder, handleDeleteOrder, handleDeleteAllOrder, orderconfirmed }) => {
+const Cart = ({ cart, orders, filterdOrders, subtotal, tax, total, handleUpdateOrder, handleDeleteOrder, handleDeleteAllOrder}) => {
     // debugger;
     const classes = useStyles();
     // console.log(cart)
@@ -49,7 +49,7 @@ const Cart = ({ cart, orders, filterdOrders, subtotal, tax, total, handleUpdateO
                             </div>
                             <div className={classes.subtotal}>subtotal price: ${order.subtotal_price}</div>
                         </div>
-                        <div className={classes.itemIcons}>
+                        {/* <div className={classes.itemIcons}> */}
 
                             {/* <div>
                                 <Button style={{minWidth:'10%', margin: '2px 5px', padding: '1px 10px', backgroundColor: 'pink'}} type="button" variant="contained"><CheckIcon onClick={()=>orderconfirmed(order.orderId, true)}/></Button>
@@ -59,7 +59,7 @@ const Cart = ({ cart, orders, filterdOrders, subtotal, tax, total, handleUpdateO
                             <div className={classes.icons}>
                                 <Button style={{minWidth:'10%', margin: '2px 5px', padding: '1px 10px', backgroundColor: 'pink'}} type="button" variant="contained"><DeleteForeverIcon onClick={() => handleDeleteOrder(order.orderId)}/></Button>
                             </div>
-                        </div>                        
+                        {/* </div>                         */}
                     </div>                       
                 ))}
                 
@@ -79,7 +79,7 @@ const Cart = ({ cart, orders, filterdOrders, subtotal, tax, total, handleUpdateO
             </div>
 
             <div style={{textAlign: 'center'}}>
-                <Button component={Link} to="/"  className={classes.emptyButton} size="large" type="button" variant="contained" color="secondary" onClick={()=>handleDeleteAllOrder()}>Empty Cart</Button>
+                <Button className={classes.emptyButton} size="large" type="button" variant="contained" color="secondary" onClick={()=>handleDeleteAllOrder()}>Empty Cart</Button>
                 <Button component={Link} to="/checkout" className={classes.checkoutButton} size="large" type="button" variant="contained" color="primary" >Checkout</Button>
             </div>
         </>
@@ -93,12 +93,9 @@ if(!cart) return 'Loading...';
             <div className={classes.toolbar}/>
             <Typography className={classes.title} variant="h4">Your Shopping Cart</Typography>
             <div className={classes.toolbar}/>
-            { !orders.length ? <div>{EmptyCart()}</div> : <div>{FilledCart()}</div>}
-            {/* <div className={classes.toolbar}/> */}           
-
-
+            { !orders.length || !filterdOrders.length ? <div>{EmptyCart()}</div> : <div>{FilledCart()}</div>}         
         </Container>
     )
 }
-// onClick={()=>addToCart(subtotal, tax, total)}
+  
 export default Cart
